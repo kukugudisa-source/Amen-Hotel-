@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Amen Hotel (Kebede Siga Bet) - Holeta</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: system-ui, sans-serif; background: #ffffff; color: #1c1c1c; line-height: 1.6; }
+  h1, h2, h3, .serif { font-family: Georgia, serif; }
+  .top-nav { background: #ffffff; color: #1c1c1c; padding: 14px 5%; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid #e2e0dc; }
+  .menu-btn { background: none; border: none; color: #1c1c1c; font-size: 1.5rem; cursor: pointer; }
+  .nav-right { display: flex; align-items: center; gap: 12px; }
+  .brand-mini { font-size: 0.75rem; letter-spacing: 2px; color: #c59b27; font-weight: 700; }
+  .lang-toggle { display: inline-flex; border: 1px solid #c81e1e; border-radius: 3px; overflow: hidden; }
+  .lang-btn { background: #ffffff; color: #1c1c1c; border: none; padding: 4px 10px; font-size: 0.75rem; font-weight: 700; cursor: pointer; }
+  .lang-btn.active { background: #c81e1e; color: #ffffff; }
+  .overlay-menu { display: none; position: fixed; inset: 0; background: #ffffff; z-index: 999; flex-direction: column; justify-content: space-between; overflow-y: auto; }
+  .overlay-menu.open { display: flex; }
+  .om-top { display: flex; justify-content: space-between; align-items: center; padding: 16px 5%; border-bottom: 1px solid #e2e0dc; }
+  .close-btn { background: none; border: none; font-size: 1.8rem; color: #1c1c1c; cursor: pointer; }
+  .om-hero { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 16px; padding: 22px 5%; align-items: center; border-bottom: 1px solid #e2e0dc; background: #f9f8f6; }
+  .om-title { font-size: 1.15rem; line-height: 1.35; text-transform: uppercase; color: #1c1c1c; }
+  .om-actions { display: flex; gap: 20px; padding: 15px 5%; border-bottom: 1px solid #e2e0dc; font-size: 0.85rem; font-weight: 700; }
+  .om-actions a { text-decoration: none; color: #c81e1e; }
+  .om-links { list-style: none; padding: 6px 5%; flex-grow: 1; }
+  .om-links li a { display: flex; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid #f0efec; text-decoration: none; color: #1c1c1c; font-size: 1rem; }
+  .om-footer { padding: 16px 5% 24px; text-align: center; background: #f9f8f6; border-top: 1px solid #e2e0dc; }
+  .hero-header { background: #ffffff; color: #1c1c1c; padding: 28px 5% 32px; display: grid; grid-template-columns: 0.85fr 1.15fr; gap: 20px; align-items: center; border-bottom: 1px solid #e2e0dc; }
+  .hh-left { text-align: center; }
+  .stars { color: #c59b27; letter-spacing: 3px; font-size: 0.95rem; margin: 8px 0 4px; }
+  .reviews { font-size: 0.8rem; color: #666666; text-decoration: underline; }
+  .hh-right h1 { font-size: 1.45rem; font-weight: 400; line-height: 1.3; text-transform: uppercase; color: #1c1c1c; }
+  .gallery-hero { position: relative; background: #111; }
+  .gallery-hero img { width: 100%; height: 340px; object-fit: cover; display: block; }
+  .gallery-bar { background: #ffffff; color: #1c1c1c; padding: 14px 5%; display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem; border-bottom: 1px solid #e2e0dc; }
+  .g-controls { display: flex; align-items: center; gap: 14px; }
+  .g-controls button { background: none; border: none; color: #1c1c1c; font-size: 1.2rem; cursor: pointer; }
+  .g-progress { width: 70px; height: 2px; background: #ddd; }
+  .g-progress-fill { height: 100%; background: #c81e1e; width: 20%; }
+  .cta-strip { background: #ffffff; padding: 18px 5%; text-align: center; border-bottom: 1px solid #e2e0dc; }
+  .cta-strip small { display: block; font-size: 0.68rem; letter-spacing: 2px; color: #666666; margin-bottom: 8px; }
+  .btn-red { display: block; width: 100%; max-width: 460px; margin: 0 auto; background: #c81e1e; color: #ffffff; border: none; padding: 14px; text-align: center; text-decoration: none; font-weight: 700; cursor: pointer; letter-spacing: 0.5px; border-radius: 3px; }
+  .overview { padding: 38px 6%; text-align: center; background: #ffffff; max-width: 820px; margin: 0 auto; color: #333333; }
+  .sec-wrap { padding: 45px 0 50px 5%; background: #f9f8f6; border-top: 1px solid #e2e0dc; }
+  .sec-wrap.white-bg { background: #ffffff; }
+  .sec-title { font-size: 1.45rem; font-weight: 400; text-transform: uppercase; margin-bottom: 22px; color: #1c1c1c; }
+  .h-scroll { display: flex; gap: 18px; overflow-x: auto; padding-right: 5%; padding-bottom: 12px; }
+  .h-card { min-width: 280px; max-width: 295px; background: #ffffff; border: 1px solid #e2e0dc; flex-shrink: 0; }
+  .h-card img { width: 100%; height: 200px; object-fit: cover; display: block; }
+  .dual-pic { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; height: 185px; background: #e2e0dc; }
+  .dual-pic img { height: 100%; }
+  .h-body { padding: 18px; }
+  .h-price { font-size: 0.82rem; font-weight: 700; color: #c81e1e; background: #fdf2f2; padding: 3px 9px; margin-bottom: 6px; display: inline-block; border: 1px solid #f5d0d0; }
+  .h-body h3 { font-size: 1.1rem; padding-bottom: 10px; border-bottom: 1px solid #e2e0dc; margin-bottom: 10px; display: flex; justify-content: space-between; }
+  .h-body p { font-size: 0.86rem; color: #666666; margin-bottom: 14px; }
+  .btn-rates { background: #c81e1e; color: #ffffff; border: none; padding: 10px 18px; font-size: 0.85rem; font-weight: 700; cursor: pointer; border-radius: 3px; }
+  .book-box { padding: 45px 5%; background: #262626; color: #ffffff; }
+  .book-box h2 { font-size: 1.45rem; font-weight: 400; text-transform: uppercase; margin-bottom: 18px; text-align: center; color: #ffffff; }
+  .book-form { max-width: 500px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
+  .book-form input, .book-form select { padding: 13px; background: #181818; border: 1px solid #444; color: #ffffff; font-size: 0.95rem; }
+  #booking-msg { text-align: center; color: #ff6b6b; font-weight: 700; margin-top: 12px; }
+  .map-sec { padding: 45px 5%; background: #ffffff; }
+  footer { background: #181818; color: #aaa; text-align: center; padding: 35px 20px; font-size: 0.85rem; }
+  footer a { color: #ffffff; text-decoration: none; font-weight: 700; }
+</style>
+</head>
+<body>
+<nav class="top-nav">
+  <button class="menu-btn" onclick="openMenu()">&#9776;</button>
+  <div class="nav-right">
+    <div class="lang-toggle">
+      <button id="btn-en" class="lang-btn active" onclick="setLang('en')">EN</button>
+      <button id="btn-am" class="lang-btn" onclick="setLang('am')">አማ</button>
+    </div>
+    <div class="brand-mini">AMEN HOTEL</div>
+  </div>
+</nav>
+
+<div id="overlay-menu" class="overlay-menu">
+  <div>
+    <div class="om-top">
+      <button class="close-btn" onclick="closeMenu()">&times;</button>
+      <div style="font-size:0.8rem; font-weight:800; letter-spacing:2px;">AMEN HOTEL</div>
+    </div>
+    <div class="om-hero">
+      <img src="logo.jpg" alt="Logo" style="width:72px; height:72px; border-radius:50%; border:2px solid #c81e1e; object-fit:cover; margin:0 auto;">
+      <div class="om-title serif" data-en="AMEN HOTEL (KEBEDE SIGA BET), HOLETA" data-am="አሜን ሆቴል (ከበደ ሥጋ ቤት)፣ ሆለታ">AMEN HOTEL (KEBEDE SIGA BET), HOLETA</div>
+    </div>
+    <div class="om-actions">
+      <a href="#location" onclick="closeMenu()">📍 <span data-en="VIEW MAP" data-am="ካርታ ይመልከቱ">VIEW MAP</span></a>
+      <a href="tel:+251912345678">📞 +251 91 234 5678</a>
+    </div>
+    <ul class="om-links">
+      <li><a href="#overview" onclick="closeMenu()"><span data-en="Overview" data-am="አጠቃላይ መግለጫ">Overview</span><span>&rsaquo;</span></a></li>
+      <li><a href="#rooms" onclick="closeMenu()"><span data-en="Accommodations (Rooms)" data-am="የሆቴል መኝታ ክፍሎች">Accommodations (Rooms)</span><span>&rsaquo;</span></a></li>
+      <li><a href="#menu" onclick="closeMenu()"><span data-en="Dining (Kebede Siga Bet)" data-am="ምግብና መጠጥ (ከበደ ሥጋ ቤት)">Dining (Kebede Siga Bet)</span><span>&rsaquo;</span></a></li>
+      <li><a href="#location" onclick="closeMenu()"><span data-en="Location & Map" data-am="መገኛ ቦታ (ሆለታ)">Location &amp; Map</span><span>&rsaquo;</span></a></li>
+      <li><a href="#gallery" onclick="closeMenu()"><span data-en="Gallery" data-am="የፎቶ ማዕከል">Gallery</span><span>&rsaquo;</span></a></li>
+    </ul>
+  </div>
+  <div class="om-footer">
+    <a href="#book" class="btn-red" onclick="closeMenu()" data-en="Check Availability" data-am="ቦታ ይያዙ">Check Availability</a>
+  </div>
+</div>
+
+<header class="hero-header">
+  <div class="hh-left">
+    <img src="logo.jpg" alt="Amen Hotel Logo" style="width:90px; height:90px; border-radius:50%; border:2px solid #c81e1e; object-fit:cover; display:block; margin:0 auto; background:#fff;">
+    <div class="stars">&#9679;&#9679;&#9679;&#9679;&#9680;</div>
+    <div class="reviews" data-en="4.8 • Holeta, Ethiopia" data-am="4.8 • ሆለታ፣ ኢትዮጵያ">4.8 &bull; Holeta, Ethiopia</div>
+  </div>
+  <div class="hh-right">
+    <h1 class="serif" data-en="AMEN HOTEL (KEBEDE SIGA BET), HOLETA" data-am="አሜን ሆቴል (ከበደ ሥጋ ቤት)፣ ሆለታ">AMEN HOTEL (KEBEDE SIGA BET), HOLETA</h1>
+  </div>
+</header>
+
+<div id="gallery" class="gallery-hero">
+  <img id="slide-image" src="vip.jpg" alt="Amen Hotel Gallery">
+  <div class="gallery-bar">
+    <div class="g-controls">
+      <button onclick="changeSlide(-1)">&lsaquo;</button>
+      <div class="g-progress"><div id="g-fill" class="g-progress-fill"></div></div>
+      <button onclick="changeSlide(1)">&rsaquo;</button>
+      <span id="slide-count" style="font-size:0.82rem;">01 / 07</span>
+    </div>
+    <div id="slide-text" style="text-decoration:underline; font-size:0.85rem;">VIP Luxury Suites</div>
+  </div>
+</div>
+
+<div class="cta-strip">
+  <small>AMEN HOTEL &bull; KEBEDE SIGA BET</small>
+  <a href="#book" class="btn-red" data-en="Check Availability" data-am="ቦታ ይያዙ (Check Availability)">Check Availability</a>
+</div>
+<section id="overview" class="overview">
+  <p data-en="Located in the heart of Holeta town, Amen Hotel (Kebede Siga Bet) offers modern luxury rooms alongside authentic Ethiopian Tire Siga, sizzling Shekla Tibs, traditional Tej, and freshly roasted Jebena Buna." data-am="በሆለታ ከተማ እምብርት የሚገኘው አሜን ሆቴል (ከበደ ሥጋ ቤት) ዘመናዊ የመኝታ ክፍሎችን ከትኩስ ጥሬ ሥጋ፣ ሸክላ ጥብስ፣ ባህላዊ ጠጅ እና የጀበና ቡና መስተንግዶ ጋር አጣምሮ ይዟል።">Located in the heart of Holeta town, Amen Hotel (Kebede Siga Bet) offers modern luxury rooms alongside authentic Ethiopian Tire Siga, sizzling Shekla Tibs, traditional Tej, and freshly roasted Jebena Buna.</p>
+</section>
+
+<section id="rooms" class="sec-wrap">
+  <h2 class="sec-title serif" data-en="ROOMS & SUITES" data-am="የሆቴል መኝታ ክፍሎች">ROOMS &amp; SUITES</h2>
+  <div class="h-scroll">
+        <div class="h-card">
+      <img src="1bed.jpg" alt="Single Room">
+      <div class="h-body">
+        <span class="h-price" data-en="1,200 ETB / Night" data-am="1,200 ብር / በቀን">1,200 ETB / Night</span>
+        <h3><span data-en="Single Room" data-am="ባለ አንድ አልጋ">Single Room</span><span>&rsaquo;</span></h3>
+        <p data-en="Cozy bed, hot shower, Wi-Fi." data-am="ምቹ አልጋ፣ ሙቅ ውሃ እና ፈጣን ዋይፋይ።">Cozy bed, hot shower, Wi-Fi.</p>
+        <button class="btn-rates" onclick="selectRoom('Single Room - 1,200 ETB')" data-en="Book Room" data-am="ክፍል ይያዙ">Book Room</button>
+      </div>
+    </div>
+    <div class="h-card">
+      <img src="2bed.jpg" alt="Double Room">
+      <div class="h-body">
+        <span class="h-price" data-en="1,800 ETB / Night" data-am="1,800 ብር / በቀን">1,800 ETB / Night</span>
+        <h3><span data-en="Double Room" data-am="ባለ ሁለት አልጋ">Double Room</span><span>&rsaquo;</span></h3>
+        <p data-en="Spacious room for two guests." data-am="ለሁለት እንግዶች የሚሆን ሰፊ ክፍል።">Spacious room for two guests.</p>
+        <button class="btn-rates" onclick="selectRoom('Double Room - 1,800 ETB')" data-en="Book Room" data-am="ክፍል ይያዙ">Book Room</button>
+      </div>
+    </div>
+
+    </div>
+    <div class="h-card">
+      <img src="vip.jpg" alt="VIP Suite">
+      <div class="h-body">
+        <span class="h-price" data-en="2,800 ETB / Night" data-am="2,800 ብር / በቀን">2,800 ETB / Night</span>
+        <h3><span data-en="VIP Suite" data-am="ቪአይፒ ልዩ ክፍል">VIP Suite</span><span>&rsaquo;</span></h3>
+        <p data-en="King bed, lounge & Jebena Buna." data-am="ትልቅ አልጋ፣ ሳሎን እና ጀበና ቡና።">King bed, lounge &amp; Jebena Buna.</p>
+        <button class="btn-rates" onclick="selectRoom('VIP Suite - 2,800 ETB')" data-en="Book Room" data-am="ክፍል ይያዙ">Book Room</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="menu" class="sec-wrap white-bg">
+  <h2 class="sec-title serif" data-en="DINING & SIGA BET MENU" data-am="የምግብና መጠጥ ዝርዝር">DINING &amp; SIGA BET MENU</h2>
+  <div class="h-scroll">
+    <div class="h-card"><div class="dual-pic"><img src="tire-siga-1.jpg"><img src="tire-siga-2.jpg"></div><div class="h-body"><span class="h-price" data-en="850 ETB / 1 KG" data-am="850 ብር / ኪሎ">850 ETB / 1 KG</span><h3><span data-en="Tire Siga (Kurt)" data-am="ጥሬ ሥጋ (ቁርጥ)">Tire Siga (Kurt)</span><span>&rsaquo;</span></h3><p data-en="Fresh raw beef with mitmita & awaze." data-am="ትኩስ ቁርጥ ከሚጥሚጣና አዋዜ ጋር።">Fresh raw beef with mitmita &amp; awaze.</p></div></div>
+    <div class="h-card"><div class="dual-pic"><img src="shekla-tibs-1.jpg"><img src="shekla-tibs-2.jpg"></div><div class="h-body"><span class="h-price" data-en="650 ETB" data-am="650 ብር">650 ETB</span><h3><span data-en="Shekla Tibs" data-am="ሸክላ ጥብስ">Shekla Tibs</span><span>&rsaquo;</span></h3><p data-en="Sizzling beef served hot in clay pot." data-am="በሸክላ የሚቀርብ ትኩስ ጥብስ።">Sizzling beef served hot in clay pot.</p></div></div>
+    <div class="h-card"><div class="dual-pic"><img src="derek-tibs-1.jpg"><img src="derek-tibse-1.jpg"></div><div class="h-body"><span class="h-price" data-en="600 ETB" data-am="600 ብር">600 ETB</span><h3><span data-en="Derek Tibs" data-am="ደረቅ ጥብስ">Derek Tibs</span><span>&rsaquo;</span></h3><p data-en="Crispy fried beef with rosemary." data-am="በሮዝሜሪ የተጠበሰ ደረቅ ጥብስ።">Crispy fried beef with rosemary.</p></div></div>
+    <div class="h-card"><div class="dual-pic"><img src="kitfo- 1.jpg"><img src="kitfo-2.jpg"></div><div class="h-body"><span class="h-price" data-en="750 ETB" data-am="750 ብር">750 ETB</span><h3><span data-en="Special Kitfo" data-am="ስፔሻል ክትፎ">Special Kitfo</span><span>&rsaquo;</span></h3><p data-en="Minced beef with spiced butter & ayib." data-am="በቅቤና በአይብ የቀረበ ልዩ ክትፎ።">Minced beef with spiced butter &amp; ayib.</p></div></div>
+    <div class="h-card"><div class="dual-pic"><img src="beer-1.jpg"><img src="beer-2.jpg"></div><div class="h-body"><span class="h-price" data-en="80 ETB" data-am="80 ብር">80 ETB</span><h3><span data-en="Beers & Draft" data-am="ቢራ እና ድራፍት">Beers &amp; Draft</span><span>&rsaquo;</span></h3><p data-en="Ice-cold local beers and draft." data-am="ቀዝቃዛ ቢራዎች እና ድራፍት።">Ice-cold local beers and draft.</p></div></div>
+    <div class="h-card"><div class="dual-pic"><img src="tej-1.jpg"><img src="tej-2.jpg"></div><div class="h-body"><span class="h-price" data-en="150 ETB / Berele" data-am="150 ብር / በረሌ">150 ETB / Berele</span><h3><span data-en="Traditional Tej" data-am="ባህላዊ ጠጅ">Traditional Tej</span><span>&rsaquo;</span></h3><p data-en="Sweet homemade honey wine." data-am="ጣፋጭ የማር ጠጅ።">Sweet homemade honey wine.</p></div></div>
+    <div class="h-card"><div class="dual-pic"><img src="jebena-buna-1.jpg"><img src="jebena-buna-2.jpg"></div><div class="h-body"><span class="h-price" data-en="50 ETB / Cup" data-am="50 ብር / ሲኒ">50 ETB / Cup</span><h3><span data-en="Jebena Buna" data-am="ጀበና ቡና">Jebena Buna</span><span>&rsaquo;</span></h3><p data-en="Freshly roasted Ethiopian coffee." data-am="ትኩስ የጀበና ቡና።">Freshly roasted Ethiopian coffee.</p></div></div>
+    <div class="h-card"><div class="dual-pic"><img src="soft-drink-1.jpg"><img src="soft-drink-2.jpg"></div><div class="h-body"><span class="h-price" data-en="45 ETB" data-am="45 ብር">45 ETB</span><h3><span data-en="Soft Drinks & Water" data-am="ለስላሳ እና ውሃ">Soft Drinks &amp; Water</span><span>&rsaquo;</span></h3><p data-en="Coca-Cola, Fanta, Sprite & water." data-am="ኮካኮላ፣ ፋንታ፣ ስፕራይት እና ውሃ።">Coca-Cola, Fanta, Sprite &amp; water.</p></div></div>
+  </div>
+</section>
+<section id="book" class="book-box">
+  <h2 class="serif" data-en="CHECK AVAILABILITY & BOOK" data-am="ቦታ ይያዙ">CHECK AVAILABILITY &amp; BOOK</h2>
+  <form class="book-form" onsubmit="submitBooking(event)">
+    <input type="text" id="cust-name" data-en-ph="Full Name" data-am-ph="ሙሉ ስም" placeholder="Full Name" required>
+    <input type="tel" id="cust-phone" placeholder="Phone Number (09...)" required>
+    <select id="room-select">
+      <option value="Single Room - 1,200 ETB" data-en="Single Room - 1,200 ETB" data-am="ባለ አንድ አልጋ - 1,200 ብር">Single Room - 1,200 ETB</option>
+      <option value="Double Room - 1,800 ETB" data-en="Double Room - 1,800 ETB" data-am="ባለ ሁለት አልጋ - 1,800 ብር">Double Room - 1,800 ETB</option>
+      <option value="VIP Suite - 2,800 ETB" data-en="VIP Suite - 2,800 ETB" data-am="ቪአይፒ ክፍል - 2,800 ብር">VIP Suite - 2,800 ETB</option>
+      <option value="Restaurant Table (Siga Bet)" data-en="Restaurant Table (Siga Bet)" data-am="የምግብ ቤት ጠረጴዛ">Restaurant Table (Siga Bet)</option>
+    </select>
+    <input type="date" id="book-date" required>
+    <button type="submit" class="btn-rates" data-en="Confirm Reservation" data-am="ትዕዛዝ ያረጋግጡ">Confirm Reservation</button>
+  </form>
+  <div id="booking-msg"></div>
+</section>
+
+<section id="location" class="map-sec">
+  <h2 class="sec-title serif" style="text-align:center;" data-en="LOCATION & MAP • HOLETA" data-am="መገኛ ቦታ • ሆለታ ከተማ">LOCATION &amp; MAP &bull; HOLETA</h2>
+  <div style="border:1px solid #e2e0dc; max-width:750px; margin:0 auto;">
+    <svg viewBox="0 0 800 260" style="width:100%; height:240px; display:block; background:#ebe6da;">
+      <rect width="800" height="260" fill="#ebe6da"/>
+      <path d="M0 180 Q 250 150, 420 130 T 800 100" stroke="#ffffff" stroke-width="18" fill="none"/>
+      <path d="M0 180 Q 250 150, 420 130 T 800 100" stroke="#c81e1e" stroke-width="5" fill="none"/>
+      <text x="60" y="158" fill="#262626" font-size="13" font-weight="bold">To Ambo / ወደ አምቦ</text>
+      <text x="610" y="85" fill="#262626" font-size="13" font-weight="bold">To Addis Ababa / ወደ አ.አ</text>
+      <path d="M405 92 C391 92 380 103 380 117 C380 135 405 158 405 158 C405 158 430 135 430 117 C430 103 419 92 405 92 Z" fill="#c81e1e"/>
+      <circle cx="405" cy="116" r="7" fill="#ffffff"/>
+      <rect x="265" y="42" width="280" height="38" fill="#262626"/>
+      <text x="405" y="66" fill="#ffffff" font-size="13" font-weight="bold" text-anchor="middle">AMEN HOTEL (KEBEDE SIGA BET) - HOLETA</text>
+    </svg>
+    <div style="padding:16px; text-align:center;">
+      <a href="https://google.com" target="_blank" class="btn-red" data-en="Open in Google Maps" data-am="በጎግል ማፕ ይክፈቱ">Open in Google Maps</a>
+    </div>
+  </div>
+</section>
+
+<div style="position:fixed; bottom:18px; right:16px; z-index:900; display:flex; flex-direction:column; gap:8px;">
+  <a href="https://t.me" target="_blank" style="background:#0088cc; color:#fff; padding:10px 15px; border-radius:50px; text-decoration:none; font-weight:700; font-size:0.82rem;">✈️ Telegram</a>
+  <a href="https://wa.me" target="_blank" style="background:#25D366; color:#fff; padding:10px 15px; border-radius:50px; text-decoration:none; font-weight:700; font-size:0.82rem;">💬 WhatsApp</a>
+</div>
+
+<footer>
+  <p style="color:#fff; font-family:Georgia,serif; letter-spacing:1.5px; margin-bottom:6px;">AMEN HOTEL (KEBEDE SIGA BET)</p>
+  <p>Holeta Town, Ethiopia &bull; <a href="tel:+251912345678">+251 91 234 5678</a></p>
+  <p style="margin-top:8px;">&copy; 2026 Amen Hotel (Kebede Siga Bet). All Rights Reserved.</p>
+</footer>
+
+<script>
+  let currentLang = 'en', currentIndex = 0;
+  const slides = [
+    { img: "vip.jpg", en: "VIP Luxury Suites", am: "ቪአይፒ ልዩ ክፍሎች" },
+    { img: "tire-siga-1.jpg", en: "Fresh Tire Siga (Kurt)", am: "ትኩስ ጥሬ ሥጋ" },
+    { img: "shekla-tibs-1.jpg", en: "Sizzling Shekla Tibs", am: "ሸክላ ጥብስ" },
+    { img: "kitfo-2.jpg", en: "Special Kitfo", am: "ስፔሻል ክትፎ" },
+    { img: "beer-2.jpg", en: "Ice-Cold Beers", am: "ቀዝቃዛ ቢራዎች" },
+    { img: "tej-2.jpg", en: "Traditional Tej", am: "ባህላዊ ጠጅ" },
+    { img: "jebena-buna-1.jpg", en: "Jebena Buna", am: "የጀበና ቡና" }
+  ];
+  function openMenu() { document.getElementById("overlay-menu").classList.add("open"); }
+  function closeMenu() { document.getElementById("overlay-menu").classList.remove("open"); }
+  function setLang(lang) {
+    currentLang = lang;
+    document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+    document.getElementById('btn-am').classList.toggle('active', lang === 'am');
+    document.querySelectorAll('[data-' + lang + ']').forEach(el => { el.innerText = el.getAttribute('data-' + lang); });
+    document.querySelectorAll('[data-' + lang + '-ph]').forEach(el => { el.placeholder = el.getAttribute('data-' + lang + '-ph'); });
+    showSlide(currentIndex);
+  }
+  function showSlide(index) {
+    if (index >= slides.length) currentIndex = 0;
+    else if (index < 0) currentIndex = slides.length - 1;
+    else currentIndex = index;
+    document.getElementById("slide-image").src = slides[currentIndex].img;
+    document.getElementById("slide-text").innerText = slides[currentIndex][currentLang];
+    document.getElementById("slide-count").innerText = "0" + (currentIndex + 1) + " / 0" + slides.length;
+    document.getElementById("g-fill").style.width = (((currentIndex + 1) / slides.length) * 100) + "%";
+  }
+  function changeSlide(step) { showSlide(currentIndex + step); }
+  setInterval(() => { changeSlide(1); }, 3000);
+  function selectRoom(roomName) {
+    document.getElementById("room-select").value = roomName;
+    document.getElementById("book").scrollIntoView({ behavior: "smooth" });
+  }
+  function submitBooking(event) {
+    event.preventDefault();
+    const name = document.getElementById("cust-name").value;
+    const phone = document.getElementById("cust-phone").value;
+    const choice = document.getElementById("room-select").value;
+    const date = document.getElementById("book-date").value;
+    const botToken = "YOUR_BOT_TOKEN", chatId = "YOUR_CHAT_ID";
+    const msg = encodeURIComponent("🏨 New Booking - Amen Hotel (Kebede Siga Bet)\n👤 Name: " + name + "\n📞 Phone: " + phone + "\n🛏️ Service: " + choice + "\n📅 Date: " + date);
+    new Image().src = `https://telegram.org{botToken}/sendMessage?chat_id=${chatId}&text=${msg}`;
+    document.getElementById("booking-msg").innerText = currentLang === 'am'
+      ? `እናመሰግናለን ${name}! ለ ${choice} በ ${date} ያስያዙት ቦታ ተልኳል።`
+      : `Thank you ${name}! Your reservation for ${choice} on ${date} is confirmed.`;
+  }
+</script>
+</body>
+</html>
