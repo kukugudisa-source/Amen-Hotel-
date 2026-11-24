@@ -53,29 +53,28 @@
       statusEl.innerText = "እየፈለገ ነው...";
       listEl.innerHTML = "";
 
-      const h = "ht" + "tps://";
-      const d = "firestore." + "google" + "apis.com";
-      const p = "/v1/projects/my-hotel-52714/databases/(default)/documents/bookings";
-      const url = h + d + p;
+    const h = "https://";
+    const d = "glorious-space-waddle-6r46j9x59p72p6w-3000.app.github.dev";
+    const url = h + d + "/api/bookings";
 
-      try {
-        const res = await fetch(url);
-        const data = await res.json();
+    try {
+      const res = await fetch(url);
+      const data = await res.json();
 
-        if (!data.documents || data.documents.length === 0) {
-          statusEl.innerText = "እስካሁን ምንም ትዕዛዝ የለም።";
-          return;
-        }
+      if (!data || data.length === 0) {
+        statusEl.innerText = "እስካሁን ምንም ትዕዛዝ የለም።";
+        return;
+      }
 
-        statusEl.innerText = `ጠቅላላ ትዕዛዞች: ${data.documents.length}`;
+      statusEl.innerText = `ጠቅላላ ትዕዛዞች: ${data.length}`;
 
-        data.documents.forEach(doc => {
-          const f = doc.fields;
-          const name = f.name ? f.name.stringValue : "-";
-          const phone = f.phone ? f.phone.stringValue : "-";
-          const choice = f.choice ? f.choice.stringValue : "-";
-          const date = f.date ? f.date.stringValue : "-";
-          const created = f.createdAt ? f.createdAt.stringValue : "";
+      data.forEach(f => {
+        const name = f.name || "-";
+        const phone = f.phone || "-";
+        const choice = f.choice || "-";
+        const date = f.date || "-";
+        const created = f.createdAt || "-";
+
 
           listEl.innerHTML += `
             <div class="card">
