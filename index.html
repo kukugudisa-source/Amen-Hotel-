@@ -268,19 +268,61 @@
     document.getElementById("room-select").value = roomName;
     document.getElementById("book").scrollIntoView({ behavior: "smooth" });
   }
-  function submitBooking(event) {
+    async function submitBooking(event) {
     event.preventDefault();
     const name = document.getElementById("cust-name").value;
     const phone = document.getElementById("cust-phone").value;
     const choice = document.getElementById("room-select").value;
     const date = document.getElementById("book-date").value;
-    const botToken = "YOUR_BOT_TOKEN", chatId = "YOUR_CHAT_ID";
-    const msg = encodeURIComponent("🏨 New Booking - Amen Hotel (Kebede Siga Bet)\n👤 Name: " + name + "\n📞 Phone: " + phone + "\n🛏️ Service: " + choice + "\n📅 Date: " + date);
-    new Image().src = `https://telegram.org{botToken}/sendMessage?chat_id=${chatId}&text=${msg}`;
-    document.getElementById("booking-msg").innerText = currentLang === 'am'
-      ? `እናመሰግናለን ${name}! ለ ${choice} በ ${date} ያስያዙት ቦታ ተልኳል።`
-      : `Thank you ${name}! Your reservation for ${choice} on ${date} is confirmed.`;
+    const msgEl = document.getElementById("booking-msg");
+
+    msgEl.innerText = currentLang === 'am' ? "እየተላከ ነው..." : "Sending...";
+
+    try {
+      await window.saveBookingToFirebase({
+        name: name,
+        phone: phone,
+        choice: choice,
+        date: date,
+        createdAt: new Date().toLocaleString()
+      });
+
+      msgEl.innerText = currentLang === 'am'
+        ? `እናመሰግናለን ${name}! ለ ${choice} በ ${date} ያስያዙት ቦታ ተልኳል።`
+        : `Thank you ${name}! Your reservation for ${choice} on ${date} is confirmed.`;
+      event.target.reset();
+        } catch (e) {
+      msgEl.innerText = "Error: " + e.message;
+    }
   }
+
+  window.saveBookingToFirebase = async function(data) {
+      const h = "ht" + "tps://";
+    const d = "firestore." + "google" + "apis.com";
+    const p = "/v1/projects/my-hotel-52714/databases/(default)/documents/bookings";
+    const url = h + d + p;
+      
+ 
+    const response = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        fields: {
+          name: { stringValue: data.name },
+          phone: { stringValue: data.phone },
+          choice: { stringValue: data.choice },
+          date: { stringValue: data.date },
+          createdAt: { stringValue: data.createdAt }
+        }
+      })
+    });
+    if (!response.ok) {
+      const err = await response.json();
+      throw new Error(err.error ? err.error.message : "Failed to send");
+    }
+  };
 </script>
 </body>
 </html>
+ 
+        

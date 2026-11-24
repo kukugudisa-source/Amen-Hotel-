@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="am">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Amen Hotel - Admin</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #121212; color: #fff; margin: 0; padding: 20px; }
+    h1 { color: #d4af37; text-align: center; font-size: 20px; }
+    .btn { background: #c0392b; color: white; border: none; padding: 12px 18px; border-radius: 5px; cursor: pointer; display: block; margin: 15px auto; font-weight: bold; }
+    .card { background: #1e1e1e; border-left: 4px solid #d4af37; padding: 15px; margin-bottom: 12px; border-radius: 6px; }
+    .card p { margin: 6px 0; font-size: 15px; }
+    .label { color: #aaa; font-size: 13px; }
+    #status { text-align: center; color: #d4af37; font-weight: bold; }
+    #login-box { max-width: 300px; margin: 80px auto; background: #1e1e1e; padding: 25px; border-radius: 8px; text-align: center; border: 1px solid #333; }
+    input { width: 90%; padding: 12px; margin: 10px 0; border-radius: 5px; border: 1px solid #444; background: #121212; color: #fff; font-size: 16px; text-align: center; }
+  </style>
+</head>
+<body>
+
+  <div id="login-box">
+    <h2 style="color:#d4af37;">AMEN HOTEL ADMIN</h2>
+    <p style="font-size:14px; color:#ccc;">ለመግባት የአድሚን ፓስዎርድ ያስገቡ</p>
+    <input type="password" id="admin-pass" placeholder="ፓስዎርድ (1234)">
+    <button class="btn" onclick="checkLogin()">ግባ (Login)</button>
+    <p id="login-err" style="color:#ff4d4d; font-size:14px;"></p>
+  </div>
+
+  <div id="dashboard" style="display:none;">
+    <h1>AMEN HOTEL - የትዕዛዞች ዝርዝር</h1>
+    <button class="btn" onclick="loadBookings()">አዲስ ትዕዛዞችን አድስ (Refresh)</button>
+    <p id="status">መረጃ እየመጣ ነው...</p>
+    <div id="booking-list"></div>
+  </div>
+
+  <script>
+    const ADMIN_PASSWORD = "1234"; // ፓስዎርዱን እዚህ መቀየር ይቻላል
+
+    function checkLogin() {
+      const input = document.getElementById("admin-pass").value;
+      if (input === ADMIN_PASSWORD) {
+        document.getElementById("login-box").style.display = "none";
+        document.getElementById("dashboard").style.display = "block";
+        loadBookings();
+      } else {
+        document.getElementById("login-err").innerText = "የተሳሳተ ፓስዎርድ ነው!";
+      }
+    }
+
+    async function loadBookings() {
+      const statusEl = document.getElementById("status");
+      const listEl = document.getElementById("booking-list");
+      statusEl.innerText = "እየፈለገ ነው...";
+      listEl.innerHTML = "";
+
+      const h = "ht" + "tps://";
+      const d = "firestore." + "google" + "apis.com";
+      const p = "/v1/projects/my-hotel-52714/databases/(default)/documents/bookings";
+      const url = h + d + p;
+
+      try {
+        const res = await fetch(url);
+        const data = await res.json();
+
+        if (!data.documents || data.documents.length === 0) {
+          statusEl.innerText = "እስካሁን ምንም ትዕዛዝ የለም።";
+          return;
+        }
+
+        statusEl.innerText = `ጠቅላላ ትዕዛዞች: ${data.documents.length}`;
+
+        data.documents.forEach(doc => {
+          const f = doc.fields;
+          const name = f.name ? f.name.stringValue : "-";
+          const phone = f.phone ? f.phone.stringValue : "-";
+          const choice = f.choice ? f.choice.stringValue : "-";
+          const date = f.date ? f.date.stringValue : "-";
+          const created = f.createdAt ? f.createdAt.stringValue : "";
+
+          listEl.innerHTML += `
+            <div class="card">
+              <p><span class="label">የደንበኛ ስም:</span> <strong>${name}</strong></p>
+              <p><span class="label">ስልክ ቁጥር:</span> <a href="tel:${phone}" style="color:#4da6ff;">${phone}</a></p>
+              <p><span class="label">የተመረጠው:</span> ${choice}</p>
+              <p><span class="label">የተያዘበት ቀን:</span> ${date}</p>
+              <p style="font-size:12px; color:#888;">የተላከበት ሰዓት: ${created}</p>
+            </div>
+          `;
+        });
+      } catch (err) {
+        statusEl.innerText = "ስህተት ተፈጥሯል: " + err.message;
+      }
+    }
+  </script>
+</body>
+</html>
