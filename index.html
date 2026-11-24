@@ -296,33 +296,22 @@
     }
   }
 
-  window.saveBookingToFirebase = async function(data) {
-      const h = "ht" + "tps://";
-    const d = "firestore." + "google" + "apis.com";
-    const p = "/v1/projects/my-hotel-52714/databases/(default)/documents/bookings";
-    const url = h + d + p;
-      
- 
+window.saveBookingToFirebase = async function(data) {
+    const h = "https://";
+    const d = "glorious-space-waddle-6r46j9x59p72p6w-3000.app.github.dev";
+    const url = h + d + "/api/bookings";
+
     const response = await fetch(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        fields: {
-          name: { stringValue: data.name },
-          phone: { stringValue: data.phone },
-          choice: { stringValue: data.choice },
-          date: { stringValue: data.date },
-          createdAt: { stringValue: data.createdAt }
-        }
-      })
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
     });
     if (!response.ok) {
-      const err = await response.json();
-      throw new Error(err.error ? err.error.message : "Failed to send");
+        throw new Error("Failed to save booking");
     }
-  };
+};
 </script>
 </body>
 </html>
- 
+  
         
